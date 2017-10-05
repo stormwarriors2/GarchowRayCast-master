@@ -17,10 +17,9 @@ public class GameController : MonoBehaviour {
 	}
     public static void Lose()
     {
-       if (PlayerController.life < 0) 
-        {
+    
             SceneManager.LoadScene("MainMenu");
-        }
+        
         
          
     }

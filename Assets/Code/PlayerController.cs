@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour {
         PawnAABB.CollisionResults results = pawn.Move(velocity * Time.deltaTime);
         if (results.hitTop || results.hitBottom) velocity.y = 0;
         if (results.hitLeft || results.hitRight) velocity.x = 0;
-
+        
    //     PawnAABB.CollisionResults lavaresults = 
 
         isGrounded = results.hitBottom;
@@ -95,12 +95,7 @@ public class PlayerController : MonoBehaviour {
             AccelerateX(axisH * acceleration * sprint);
         }
 
-     
-      /*  if (Input.GetButtonDown("Crouch"))
-        {
-    //        pawn.transform.x = .5f;
-    //        pawn.transform.y = .5f;
-        }*/
+    
     }
     /// <summary>
     /// Deceleration

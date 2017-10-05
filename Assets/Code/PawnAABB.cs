@@ -92,6 +92,7 @@ public class PawnAABB : MonoBehaviour {
     BoxCollider2D aabb;
     public float skinWidth = 0.1f;
     public LayerMask collidableWith;
+    public LayerMask lava;
 
 
     void Start()
@@ -119,12 +120,20 @@ public class PawnAABB : MonoBehaviour {
         CollisionResults result = new CollisionResults(distance, aabb.bounds, skinWidth);
 
 
-        DoRaycasts(ref result, false); // vertical
-        DoRaycasts( ref result, true); // horizontal 
+        DoRaycasts(ref result, false, false); // vertical
+        DoRaycasts( ref result, true, false); // horizontal
 
         return result;
     }
-    private void DoRaycasts(ref CollisionResults results, bool doHorizontal)
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="results"></param>
+    /// <param name="doHorizontal"></param>
+    /// <param name="isLava"></param>
+    private void DoRaycasts(ref CollisionResults results, bool doHorizontal, bool isLava)
     {
         float sign = Mathf.Sign(doHorizontal ? results.distance.x : results.distance.y);
         Vector3 dir = sign * (doHorizontal ? Vector3.right : Vector3.up);
@@ -134,15 +143,28 @@ public class PawnAABB : MonoBehaviour {
 
         foreach (Vector3 origin in origins)
         {
+
+
             Debug.DrawRay(origin, dir * rayLength);
             RaycastHit2D hit = Physics2D.Raycast(origin, dir, rayLength, collidableWith);
+            RaycastHit2D lavahit = Physics2D.Raycast(origin, dir, rayLength, lava);
 
-           if(hit.collider && hit.distance < rayLength)
+
+            if (hit.collider && hit.distance < rayLength)
             {
                 rayLength = hit.distance;
                 results.Limit(rayLength - skinWidth, doHorizontal);
                 
             }
+
+            if(lavahit.collider && lavahit.distance < rayLength)
+            {
+                rayLength = lavahit.distance;
+                results.Limit(rayLength - skinWidth, doHorizontal);
+                GameController.Lose();
+            }
+
+
         }
 
     }
